@@ -189,6 +189,50 @@ public:
       HPDF_Page_Stroke(page);
     }
   }
+
+  void FillAreaWithTimes(HPDF_Page& page,
+                         HPDF_REAL area_x_start,
+                         HPDF_REAL area_y_start,
+                         HPDF_REAL area_x_stop,
+                         HPDF_REAL area_y_stop,
+                         HPDF_REAL line_gap,
+                         HPDF_REAL page_height) {
+    HPDF_REAL dim_start;
+    HPDF_REAL dim_stop;
+    int ngaps ;
+//    std::string time;
+    char time[8];
+    int  hour;
+    const HPDF_UINT16 DASH_MODE1[] = {2, HPDF_UINT16(line_gap)};
+
+    dim_start = area_y_start;
+    dim_stop = area_y_stop;
+
+    HPDF_Page_SetLineWidth(page, 0.5);
+    HPDF_Page_SetGrayStroke(page, 0.5);
+    ngaps=1;
+    hour=9;
+    for (HPDF_REAL dim = dim_start; dim < dim_stop; dim = dim + line_gap) {
+
+      HPDF_Page_SetLineWidth(page, 2);
+      HPDF_Page_SetDash(page, DASH_MODE1, 2, 0);
+      HPDF_Page_MoveTo(page, area_x_start, page_height - dim);
+      HPDF_Page_LineTo(page, area_x_stop, page_height - dim);
+      HPDF_Page_Stroke(page);
+
+      if( 0 == ngaps % 4) {
+        HPDF_Page_BeginText(_page);
+        HPDF_Page_MoveTextPos(page,
+                            area_x_start,
+                            page_height - dim);
+        sprintf(time, "%02d:00", hour++ );
+        HPDF_Page_ShowText(page, time);
+        HPDF_Page_EndText(page);
+      }
+      ngaps++;
+    }
+  }
+
   /*!
    * @brief
    * Create the page for this object with the given height and width
@@ -248,6 +292,8 @@ public:
                  HPDF_REAL gray
                  ) {
     HPDF_REAL grayfill = HPDF_Page_GetGrayFill(page) ;
+    // or use 
+    // HPDF_Page_GSave(page);
     HPDF_Page_SetGrayFill(page, gray);
     HPDF_Page_Rectangle(page,
         rect_x_start,
@@ -256,6 +302,8 @@ public:
         rect_y_length);
     HPDF_Page_Fill(page);
     HPDF_Page_SetGrayFill(page, grayfill);
+    // or
+    // HPDF_Page_GRestore(page);
   }
 
   /*!
