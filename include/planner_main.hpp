@@ -89,6 +89,7 @@ public:
       std::cout << "[ERR] Failed to create PDF object" << std::endl;
       throw std::exception();
     }
+    _outline = HPDF_CreateOutline(_pdf, NULL, _page_title.c_str(), NULL);
   }
 
   void CreateYearsSection(HPDF_Doc& doc) {

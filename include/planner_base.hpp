@@ -105,6 +105,9 @@ protected:
   /*! Whether it should be portrait / landscape orientation */
   bool _is_portrait;
 
+  /*! TOC entry for this object */
+  HPDF_Outline _outline;
+
 public:
   PlannerBase()
       : _id(0), _note_section_percentage(0.5), _page_title("Base"),
@@ -114,6 +117,7 @@ public:
         _page_height(Remarkable_height_px), _is_portrait(false) {
     _margin_left = _margin_width;
     _margin_right = _page_width - _margin_width;
+    _outline = NULL;
   }
 
   PlannerBase(std::string grid_string, bool is_left_handed)
@@ -124,6 +128,7 @@ public:
         _page_height(Remarkable_height_px), _is_portrait(false) {
     _margin_left = _margin_width;
     _margin_right = _page_width - _margin_width;
+    _outline = NULL;
   }
 
   void SetGridString(std::string grid_string) { _grid_string = grid_string; }
@@ -201,7 +206,6 @@ public:
     HPDF_REAL dim_start;
     HPDF_REAL dim_stop;
     int ngaps ;
-//    std::string time;
     char time[8];
     int  hour;
     const HPDF_UINT16 DASH_MODE1[] = {2, HPDF_UINT16(line_gap)};
@@ -278,6 +282,8 @@ public:
 
   HPDF_Page& GetPage() { return _page; }
 
+  HPDF_Outline& GetOutline() { return _outline; }
+
   void SetNotesSectionPercentage(double notes_section_percentage) {
     _note_section_percentage = notes_section_percentage;
   }
@@ -348,6 +354,7 @@ public:
 
     DrawTitleSeparator();
 
+//    HPDF_CreateOutline(_pdf, _outline, _page_title, NULL);
   }
 
   void DrawTitleSeparator() {

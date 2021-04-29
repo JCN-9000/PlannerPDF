@@ -276,6 +276,12 @@ public:
     if (false == _is_portrait) {
       CreateNotesSection();
     }
+
+    // TOC Entry
+    _outline = HPDF_CreateOutline(doc, _parent->GetOutline(), _page_title.c_str(), NULL);
+    HPDF_Destination dest = HPDF_Page_CreateDestination(_page);
+    HPDF_Outline_SetDestination(_outline,dest);
+    HPDF_Outline_SetOpened(_outline,false);
   }
 };
 #endif // PLANNER_MONTH_HPP

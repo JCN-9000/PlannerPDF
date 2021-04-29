@@ -133,6 +133,12 @@ public:
 
   void Build(HPDF_Doc& doc) {
     CreatePage(doc, _page_height, _page_width);
+    // TOC entry
+    _outline = HPDF_CreateOutline(doc, _parent->GetOutline(), _page_title.c_str(), NULL);
+    HPDF_Destination dest = HPDF_Page_CreateDestination(_page);
+    HPDF_Outline_SetDestination(_outline,dest);
+    HPDF_Outline_SetOpened(_outline,false);
+
     /* Add months to _months and call build on each of them */
     for (size_t month_id = 1; month_id <= 12; month_id++) {
       _months.push_back(std::make_shared<PlannerMonth>(
@@ -167,6 +173,7 @@ public:
     if (false == _is_portrait) {
       CreateNotesSection();
     }
+
   }
 };
 #endif // PLANNER_YEAR_HPP
